@@ -7,8 +7,6 @@ import 'package:where_to_app/constants/constants.dart';
 import 'package:where_to_app/view_models/login_viewmodel.dart';
 
 class WelcomePage extends StatelessWidget{
-  const WelcomePage({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
