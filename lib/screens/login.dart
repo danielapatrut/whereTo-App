@@ -19,6 +19,7 @@ class LoginScreen extends StatelessWidget{
         } else if (snapshot.hasError) {
           return Center(child: Text('Something went wrong!'));
         } else {
+          print('sunt aici');
           return WelcomePage();
         }
       }

@@ -39,10 +39,11 @@ class PlacesService {
     return jsonResults.map((place) => Place.fromJson(place)).toList();
   }
 
-  Future<List<Place>> getSurprisePlaces (double lat, double lng, String placeType, num distance, num maxPrice) async
+  Future<List<Place>> getSurprisePlaces (double lat, double lng, String placeType, String distance, String maxPrice) async
   {
     var url =
         'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=$lat%2C$lng&radius=$distance&type=$placeType&maxprice=$maxPrice&key=$key';
+    print(url);
     var response = await http.get(Uri.parse(url));
     var json = convert.jsonDecode(response.body);
     var jsonResults = json['results'] as List;

@@ -1,11 +1,13 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:bot_toast/bot_toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:where_to_app/constants/constants.dart';
 import 'package:where_to_app/models/place.dart';
 import 'package:where_to_app/models/place_search.dart';
 import 'package:where_to_app/services/geolocator_service.dart';
@@ -21,7 +23,7 @@ class ApplicationBloc with ChangeNotifier {
   //Variables
   late Position currentLocation  ;
   late List<PlaceSearch> searchResults = List.empty();
-  StreamController<Place> selectedLocation = StreamController<Place>();
+  StreamController<Place> selectedLocation = StreamController<Place>.broadcast();
   List<Marker> markers = List<Marker>.empty();
   late String placeType = 'none';
   final _firestoreInstance = FirebaseFirestore.instance;
@@ -53,25 +55,43 @@ class ApplicationBloc with ChangeNotifier {
     notifyListeners();
   }
 
-  getSurprisePlace(String type, num minRating, num priceRange, num distance) async
+  getSurprisePlace(String type, num minRating, String priceRange, String distance, bool visited) async
   {
     var places = await placesService.getSurprisePlaces(
-        currentLocation.latitude, currentLocation.longitude, type, distance, priceRange);
-    for (var place in places)
-      {
-        if (place.rating == null || place.rating! < minRating)
-          {
-            places.remove(place);
-          }
+        currentLocation.latitude, currentLocation.longitude, type, distance,
+        priceRange);
+    print(places);
+    for (var place in places) {
+      if (place.rating == null || place.rating! < minRating) {
+        places.remove(place);
+      }
+      final snapShot = await _firestoreInstance
+          .collection('users')
+          .doc(auth.currentUser?.uid).collection('visitedPlaces').doc(
+          place.placeId) // varuId in your case
+          .get();
+
+      if ((snapShot == null || !snapShot.exists) && visited) {
+        places.remove(place);
       }
 
-    if (places.length != 0)
-      {
-        var _random = new Random();
-        int randomPlaceIndex = _random.nextInt(places.length-1);
-        setSelectedLocation(places[randomPlaceIndex].placeId);
+    }
 
-      }
+    if (places.length != 0) {
+      var _random = new Random();
+      int randomPlaceIndex = _random.nextInt(places.length - 1);
+      print(places[randomPlaceIndex].name);
+      setSelectedLocation(places[randomPlaceIndex].placeId);
+
+    }
+    else {
+      BotToast.showSimpleNotification(title: "Couldn't find a place that matches",
+        titleStyle: TextStyle(color: defaultColor,
+          fontSize: 18,
+          fontWeight: FontWeight.bold,),
+        borderRadius: 20,);
+    }
+    notifyListeners();
   }
 
 

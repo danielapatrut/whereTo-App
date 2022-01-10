@@ -5,6 +5,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:where_to_app/constants/constants.dart';
 import 'package:where_to_app/screens/visitedPlacesScreen.dart';
+import 'package:where_to_app/screens/welcomeScreen.dart';
+
+import 'login.dart';
 
 final _firestoreInstance = FirebaseFirestore.instance;
 final FirebaseAuth auth = FirebaseAuth.instance;
@@ -19,6 +22,13 @@ class SettingsScreen extends StatelessWidget {
           return SimpleDialog(
             title: Text('Select preffered distance'),
             children: [
+              SimpleDialogOption(
+                padding: EdgeInsets.symmetric(vertical: 20, horizontal: 24),
+                child: Text('100 m'),
+                onPressed: () {
+                  setDistanceValue(100);
+                  Navigator.pop(context);
+                },),
               SimpleDialogOption(
                 padding: EdgeInsets.symmetric(vertical: 20, horizontal: 24),
                 child: Text('200 m'),
@@ -121,7 +131,29 @@ class SettingsScreen extends StatelessWidget {
                               createDialog(context);
                             },
                           ),
-                        )
+                        ),
+                        Card(
+                          child: ListTile(
+                            title: Text('Log out', style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.normal,
+                              color: Colors.black,
+
+                            ),),
+                            shape: RoundedRectangleBorder(
+                              side: BorderSide(
+                                  color: googleTextColor!.withOpacity(0.2),
+                                  width: 0.5
+                              ),
+                            ),
+                            onTap: () {
+                              signOut();
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) => LoginScreen()));
+
+                            },
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -143,6 +175,11 @@ class SettingsScreen extends StatelessWidget {
           'preferedDistance': i,
         });
 
+  }
+
+  Future<void> signOut() async
+  {
+    await auth.signOut();
   }
 
 }
