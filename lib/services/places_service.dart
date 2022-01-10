@@ -4,6 +4,7 @@ import 'dart:convert' as convert;
 
 import 'package:where_to_app/models/place_search.dart';
 
+
 class PlacesService {
 
   final key = 'AIzaSyAkAHHEdiykJTWJC4c1WSYAFDk0ulNDMkc';
@@ -27,9 +28,9 @@ class PlacesService {
     return Place.fromJson(jsonResult);
   }
 
-  Future<List<Place>> getPlaces (double lat, double lng, String placeType) async {
+  Future<List<Place>> getPlaces (double lat, double lng, String placeType, String radius) async {
     var url =
-        'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=$lat%2C$lng&radius=1500&type=$placeType&key=$key';
+        'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=$lat%2C$lng&radius=$radius&type=$placeType&key=$key';
     print(url);
     var response = await http.get(Uri.parse(url));
     var json = convert.jsonDecode(response.body);
@@ -48,5 +49,6 @@ class PlacesService {
     return jsonResults.map((place) => Place.fromJson(place)).toList();
 
   }
+
 
 }

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +11,7 @@ import 'package:where_to_app/blocs/app_bloc.dart';
 import 'package:where_to_app/constants/constants.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:where_to_app/models/place.dart';
+import 'package:where_to_app/screens/settingsScreen.dart';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({Key? key}) : super(key: key);
@@ -21,6 +23,8 @@ class HomeScreen extends StatefulWidget {
 bool _isSearchOpen = false;
 bool _areResultsVisible = false;
 bool _showPlaces = false;
+
+
 
 class _HomeScreenState extends State<HomeScreen> {
 
@@ -89,6 +93,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               fixedSize: Size(40, 40),
                               shape: CircleBorder()),
                           onPressed: () {
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) => SettingsScreen()));
                           },
                         ),
                       )),
@@ -158,7 +164,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               color: Colors.white,
                               fontSize: 18,
                               fontWeight: FontWeight.bold)),
-                      onPressed: () {},
+                      onPressed: () {
+                      },
                     )),
                     Positioned(
                       top: 10,

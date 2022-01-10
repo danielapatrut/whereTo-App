@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -17,11 +19,25 @@ class ApplicationBloc with ChangeNotifier {
   final markerService = MarkerService();
 
   //Variables
-  late Position currentLocation;
+  late Position currentLocation = Position(
+    latitude: 0,
+    longitude: 0,
+    altitude: 0,
+    accuracy: 0,
+    speed: 0,
+    speedAccuracy: 0,
+    timestamp: DateTime(2022),
+    heading: 0
+
+  );
   late List<PlaceSearch> searchResults = List.empty();
   StreamController<Place> selectedLocation = StreamController<Place>();
   List<Marker> markers = List<Marker>.empty();
   late String placeType = 'none';
+  final _firestoreInstance = FirebaseFirestore.instance;
+  final FirebaseAuth auth = FirebaseAuth.instance;
+  late String _distanceRadius = '1500';
+
 
   ApplicationBloc()
   {
@@ -80,6 +96,8 @@ class ApplicationBloc with ChangeNotifier {
   toggleNearbyPlaces(String value, bool selected) async
   {
     setCurrentLocation();
+    setDistance();
+    print(_distanceRadius);
     if (selected){
       placeType = value;
     }
@@ -89,11 +107,8 @@ class ApplicationBloc with ChangeNotifier {
     }
      if (placeType !=  'none') {
       var places = await placesService.getPlaces(
-          currentLocation.latitude, currentLocation.longitude, placeType);
+          currentLocation.latitude, currentLocation.longitude, placeType, _distanceRadius);
       markers=[];
-      print(places.length);
-      print(currentLocation.latitude);
-      print(currentLocation.longitude);
       if (places.length >0) {
         for (var place in places)
           {
@@ -103,5 +118,12 @@ class ApplicationBloc with ChangeNotifier {
       }
     }
     notifyListeners();
+  }
+
+  void setDistance() async {
+   await _firestoreInstance.collection('users').doc(auth.currentUser?.uid).get()
+       .then((value) => {
+         _distanceRadius = value.data()!['preferedDistance'].toString()
+   });
   }
 }
