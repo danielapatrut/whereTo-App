@@ -19,17 +19,7 @@ class ApplicationBloc with ChangeNotifier {
   final markerService = MarkerService();
 
   //Variables
-  late Position currentLocation = Position(
-    latitude: 0,
-    longitude: 0,
-    altitude: 0,
-    accuracy: 0,
-    speed: 0,
-    speedAccuracy: 0,
-    timestamp: DateTime(2022),
-    heading: 0
-
-  );
+  late Position currentLocation ;
   late List<PlaceSearch> searchResults = List.empty();
   StreamController<Place> selectedLocation = StreamController<Place>();
   List<Marker> markers = List<Marker>.empty();

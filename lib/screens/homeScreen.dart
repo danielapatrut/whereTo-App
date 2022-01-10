@@ -155,17 +155,20 @@ class _HomeScreenState extends State<HomeScreen> {
                     bottom: 50,
                     left: 60,
                     right: 60,
-                    child: ElevatedButton(
-                      child: Text('Surpise me!'),
-                      style: ElevatedButton.styleFrom(
-                          primary: defaultColor,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                          textStyle: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold)),
-                      onPressed: () {
-                      },
+                    child: Visibility(
+                      visible: !_isSearchOpen,
+                      child: ElevatedButton(
+                        child: Text('Surpise me!'),
+                        style: ElevatedButton.styleFrom(
+                            primary: defaultColor,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                            textStyle: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold)),
+                        onPressed: () {
+                        },
+                      ),
                     )),
                     Positioned(
                       top: 10,
