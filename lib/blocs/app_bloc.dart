@@ -76,10 +76,9 @@ class ApplicationBloc with ChangeNotifier {
       }
 
     }
-
     if (places.length != 0) {
       var _random = new Random();
-      int randomPlaceIndex = _random.nextInt(places.length - 1);
+      int randomPlaceIndex = _random.nextInt(places.length);
       print(places[randomPlaceIndex].name);
       setSelectedLocation(places[randomPlaceIndex].placeId);
 
