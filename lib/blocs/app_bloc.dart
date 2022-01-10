@@ -19,7 +19,7 @@ class ApplicationBloc with ChangeNotifier {
   final markerService = MarkerService();
 
   //Variables
-  late Position currentLocation ;
+  late Position currentLocation  ;
   late List<PlaceSearch> searchResults = List.empty();
   StreamController<Place> selectedLocation = StreamController<Place>();
   List<Marker> markers = List<Marker>.empty();
@@ -27,7 +27,6 @@ class ApplicationBloc with ChangeNotifier {
   final _firestoreInstance = FirebaseFirestore.instance;
   final FirebaseAuth auth = FirebaseAuth.instance;
   late String _distanceRadius = '1500';
-
 
   ApplicationBloc()
   {
