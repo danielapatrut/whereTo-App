@@ -20,7 +20,7 @@ class SettingsScreen extends StatelessWidget {
     return showDialog(context: context,
         builder: (context){
           return SimpleDialog(
-            title: Text('Select preffered distance'),
+            title: Text('Select preferred distance'),
             children: [
               SimpleDialogOption(
                 padding: EdgeInsets.symmetric(vertical: 20, horizontal: 24),
