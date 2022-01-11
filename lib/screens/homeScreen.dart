@@ -194,7 +194,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     )),
                 Positioned(
-                  top: 10,
+                  top: 50,
                   right: 20,
                   left: 20,
                   child: Visibility(
@@ -228,7 +228,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Stack(
                     children: [
                       Positioned(
-                        top: 70,
+                        top: 110,
                         left: 20,
                         right: 20,
                         child: Container(
@@ -240,7 +240,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                       Positioned(
-                        top: 70,
+                        top: 110,
                         left: 20,
                         right: 20,
                         child: Container(
