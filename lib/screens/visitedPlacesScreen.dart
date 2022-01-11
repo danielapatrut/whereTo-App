@@ -35,6 +35,7 @@ class VisitedPlacesScreen extends StatelessWidget{
                     child: StreamBuilder<QuerySnapshot>(
                       stream: _firestoreInstance.collection('users').doc(auth.currentUser?.uid).collection('visitedPlaces').snapshots(),
                       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                        if (snapshot.hasData)
                         return ListView(
                         children: snapshot.data!.docs.map((place) {
                           return Center(
@@ -44,6 +45,11 @@ class VisitedPlacesScreen extends StatelessWidget{
                             ),
                           );
     }).toList(),
+                        );
+                        return Center(
+                          child: CircularProgressIndicator(
+                            color: defaultColor,
+                          ),
                         );
                           },
                         )
