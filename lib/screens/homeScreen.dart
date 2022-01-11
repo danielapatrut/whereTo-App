@@ -69,7 +69,9 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       body: (applicationBloc.currentLocation == null)
           ? Center(
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(
+                color: defaultColor,
+              ),
             )
           : Stack(
               children: [
@@ -80,8 +82,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         myLocationEnabled: true,
                         initialCameraPosition: CameraPosition(
                           target: LatLng(
-                              applicationBloc.currentLocation.latitude,
-                              applicationBloc.currentLocation.longitude),
+                              applicationBloc.currentLocation!.latitude,
+                              applicationBloc.currentLocation!.longitude),
                           zoom: 14,
                         ),
                         onMapCreated: (GoogleMapController controller) {

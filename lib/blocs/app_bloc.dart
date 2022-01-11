@@ -21,7 +21,7 @@ class ApplicationBloc with ChangeNotifier {
   final markerService = MarkerService();
 
   //Variables
-  late Position currentLocation  ;
+  Position? currentLocation  ;
   late List<PlaceSearch> searchResults = List.empty();
   StreamController<Place> selectedLocation = StreamController<Place>.broadcast();
   List<Marker> markers = List<Marker>.empty();
@@ -58,24 +58,34 @@ class ApplicationBloc with ChangeNotifier {
   getSurprisePlace(String type, num minRating, String priceRange, String distance, bool visited) async
   {
     var places = await placesService.getSurprisePlaces(
-        currentLocation.latitude, currentLocation.longitude, type, distance,
+        currentLocation!.latitude, currentLocation!.longitude, type, distance,
         priceRange);
-    print(places);
+    var placesToRemove = [];
     for (var place in places) {
       if (place.rating == null || place.rating! < minRating) {
-        places.remove(place);
+        placesToRemove.add(place);
       }
       final snapShot = await _firestoreInstance
           .collection('users')
           .doc(auth.currentUser?.uid).collection('visitedPlaces').doc(
-          place.placeId) // varuId in your case
+          place.placeId)
           .get();
 
-      if ((snapShot == null || !snapShot.exists) && visited) {
-        places.remove(place);
+      if ((snapShot == null || !snapShot.exists)) {
+        if (visited){
+          placesToRemove.add(place);
+        }
       }
+      else
+        {
+          if (!visited)
+            {
+              placesToRemove.add(place);
+            }
+        }
 
     }
+    places.removeWhere((place) => placesToRemove.contains(place));
     if (places.length != 0) {
       var _random = new Random();
       int randomPlaceIndex = _random.nextInt(places.length);
@@ -115,7 +125,7 @@ class ApplicationBloc with ChangeNotifier {
     }
      if (placeType !=  'none') {
       var places = await placesService.getPlaces(
-          currentLocation.latitude, currentLocation.longitude, placeType, _distanceRadius);
+          currentLocation!.latitude, currentLocation!.longitude, placeType, _distanceRadius);
       markers=[];
       if (places.length >0) {
         for (var place in places)
